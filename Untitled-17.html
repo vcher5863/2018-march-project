@@ -1,0 +1,89 @@
+<html>
+<style>
+	.card{
+		width:300px;
+
+		padding:10px;
+		margin:10px;
+		display:inline-block;
+		border-radius:10px;
+		box-shadow: black 5px 5px 5px;
+		color: black
+	}
+	h1{
+		font-family:"Arial";
+		text-shadow:black 2px 2px 2px;
+	}
+	p,a{
+		font-size:14pt;
+		font-family:"Arial";
+		color: black 
+	}
+	img{
+		width:90%;
+		margin:5px;
+		border-radius:10px;
+		box-shadow:white 5px 5px 5px;
+	}
+	a{
+		background-color:black;
+		text-decoration:none;
+		color:white;
+		font-weight:bold;
+		padding:5px;
+		border-radius:10px;
+		box-shadow:black 5px 5px 5px;
+	}
+	body {
+		background-color: orange;
+	}
+
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
+
+<h1><i> Regents From  2014 - 2017 </i></h1>
+<p> This website is a site where you can look up regents examns from 2014-2017.<br> You can enter the years "2014", "2015", "2016", or "2017" and a list<br> of schools, scores and subjects will pop up.<br>*THIS WEBSITE IS UNDER MAINTENANCE*  </p>
+<script type = "text/template" id = "Template">
+    <div class = 'card'>
+		<marquee><h1><font size = "6" color = "black"> {{school_name}} </font> </h1></marquee>
+		<h2> {{regents_exam}} </h2>
+        <p> Percent Scoring 65 Or Above: {{percent_scoring_65_or_above}} </p>
+		<p> Percent Scoring 80 Or Above: {{percent_scoring_80_or_above}} </p>
+		<p> Percent Scoring Below 65: {{percent_scoring_below_65}} </p>
+
+    </div>
+</script>
+
+<script>
+    var data;
+    function loadJSON(){
+        $.getJSON("https://data.cityofnewyork.us/resource/eqwn-dfwq.json",function(results){
+            data = results;
+        })
+    }
+
+    function Regents(){
+        var build = "";
+        var year = [];
+
+        var output = document.getElementById("output");
+        var CardTemplate = document.getElementById("Template").innerHTML;
+        var SubjectName = document.getElementById("SubjectName");
+        for(var index = 0; index < data.length; index ++){
+            if(data[index].year.toLowerCase().indexOf(SubjectName.value.toLowerCase()) == SubjectName.value.toLowerCase().indexOf(SubjectName.value.toLowerCase())){
+				build += Mustache.render(CardTemplate,data[index])
+				TEXT = SubjectName.value;
+			}
+		}
+		output.innerHTML = "<h2> Year: " + SubjectName.value + "</h2>" +  build
+    }
+</script>
+
+<body onload = "loadJSON()">
+    <div id = "output"></div>
+    <input id = "SubjectName" type = "text" placeholder = "Enter Year">
+    <button onclick = "Regents()"> Click </button>
+</body>
+</html>
